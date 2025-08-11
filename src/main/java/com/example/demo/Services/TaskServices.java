@@ -1,5 +1,7 @@
 package com.example.demo.Services;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -12,13 +14,14 @@ import com.example.demo.Entities.TaskEntity;
 public class TaskServices {
     private ArrayList<TaskEntity> tasks = new ArrayList<>();
     private int taskId = 1;
+    private final SimpleDateFormat deadlineFormatter=new SimpleDateFormat("YYYY-MM-DD");
 
-    public TaskEntity addTask(String title, String description, String deadline) {
+    public TaskEntity addTask(String title, String description, String deadline) throws ParseException {
         TaskEntity task = new TaskEntity();
         task.setId(taskId);
         task.setTitle(title);
         task.setDescription(description);
-       // task.setDeadline(new Date(deadline)); // This still works but is deprecated
+       task.setDeadline(deadlineFormatter.parse(deadline)); // This still works but is deprecated
         task.setCompleted(false);
 
         tasks.add(task); // ✅ Fixed from task.add(task)
@@ -37,5 +40,24 @@ public class TaskServices {
             }
         }
         return null;
+    }
+    public TaskEntity updateTask(int id,String descrption,String deadline,Boolean completed)throws ParseException{
+    	TaskEntity task=getTaskById(id);
+    	if(task==null) {
+    		return null;
+    		
+    	}
+    	if(descrption!=null) {
+    	  task.setDescription(descrption);
+    	}
+    	if(deadline!=null) {
+    	task .setDeadline(deadlineFormatter.parse(deadline));
+    	}
+    	if(completed!=null) {
+    	task.setCompleted(completed);
+    	}
+    	return task;
+    	
+    	
     }
 }
